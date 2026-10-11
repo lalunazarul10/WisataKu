@@ -1,0 +1,19 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Destinasi {
+  hargaTiket: Int!
+  id: Int!
+  kategori: String!
+  nama: String!
+}
+
+type Mutation {
+  tambahDestinasi(hargaTiket: Int!, kategori: String!, nama: String!): Destinasi!
+}
+
+type Query {
+  cariDestinasi(kategori: String): [Destinasi!]!
+  destinasi(id: Int!): Destinasi!
+}

@@ -1,101 +1,76 @@
+
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  Query,
+  ParseIntPipe,
+  HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+import { DestinasiService } from './destinasi.service';
 import { CreateDestinasiDto } from './dto/create-destinasi.dto';
 import { UpdateDestinasiDto } from './dto/update-destinasi.dto';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
 @ApiTags('Destinasi')
 @Controller('destinasi')
 export class DestinasiController {
+  constructor(
+    private readonly destinasiService: DestinasiService,
+  ) {}
+
+  // Menampilkan semua destinasi (publik)
   @Get()
   @ApiOperation({
-    summary: 'Menampilkan daftar destinasi wisata',
+    summary:
+      'Menampilkan daftar destinasi, dapat difilter berdasarkan kategori',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Daftar destinasi berhasil diambil',
-  })
-  findAll() {
-    return 'Daftar destinasi wisata akan tampil di sini';
+  findAll(@Query('kategori') kategori?: string) {
+    return this.destinasiService.findAll(kategori);
   }
 
-  @Post()
-  @ApiOperation({
-    summary: 'Menambahkan destinasi baru (khusus admin)',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Destinasi berhasil dibuat',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Data tidak valid',
-  })
-  create(@Body() dto: CreateDestinasiDto) {
-    return dto;
-  }
-
+  // Menampilkan detail destinasi (publik)
   @Get(':id')
-  @ApiOperation({
-    summary: 'Menampilkan detail destinasi berdasarkan ID',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Detail destinasi berhasil diambil',
-  })
-  findOne(@Param('id') id: string) {
-    return {
-      id: Number(id),
-      nama: 'Pantai Kuta Mandalika',
-      kategori: 'Pantai',
-      hargaTiket: 15000,
-    };
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.destinasiService.findOne(id);
   }
 
+  // Menambahkan destinasi (khusus admin)
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  create(@Body() dto: CreateDestinasiDto) {
+    return this.destinasiService.create(dto);
+  }
+
+  // Mengubah destinasi (khusus admin)
   @Patch(':id')
-  @ApiOperation({
-    summary: 'Mengubah data destinasi berdasarkan ID',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Destinasi berhasil diperbarui',
-  })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDestinasiDto,
   ) {
-    return {
-      id: Number(id),
-      message: 'Destinasi berhasil diperbarui',
-      data: dto,
-    };
+    return this.destinasiService.update(id, dto);
   }
 
+  // Menghapus destinasi (khusus admin)
   @Delete(':id')
-  @ApiOperation({
-    summary: 'Menghapus destinasi berdasarkan ID',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Destinasi berhasil dihapus',
-  })
-  remove(@Param('id') id: string) {
-    return {
-      id: Number(id),
-      message: 'Destinasi berhasil dihapus',
-    };
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @HttpCode(200)
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.destinasiService.remove(id);
   }
 }

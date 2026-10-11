@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Destinasi {
+  id         Int    @id @default(autoincrement())
+  nama       String
+  kategori   String
+  hargaTiket Int
+
+  @@map("destinasi")
+}
+
+
+model User {
+  id           Int    @id @default(autoincrement())
+  nama         String
+  email        String @unique
+  passwordHash String
+  role         String @default("wisatawan")
+}

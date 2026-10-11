@@ -57,3 +57,18 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+/generated/prisma
+
+# Environment variables
+.env.*
+
+# Local credentials
+userpass.txt
+
+# Agent configuration
+.agents/
+.claude/
+.cursor/
+.devin/
+!.env.example

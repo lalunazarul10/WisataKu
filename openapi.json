@@ -18,13 +18,22 @@
     "/destinasi": {
       "get": {
         "operationId": "DestinasiController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "kategori",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Daftar destinasi berhasil diambil"
+            "description": ""
           }
         },
-        "summary": "Menampilkan daftar destinasi wisata",
+        "summary": "Menampilkan daftar destinasi, dapat difilter berdasarkan kategori",
         "tags": [
           "Destinasi"
         ]
@@ -44,13 +53,9 @@
         },
         "responses": {
           "201": {
-            "description": "Destinasi berhasil dibuat"
-          },
-          "400": {
-            "description": "Data tidak valid"
+            "description": ""
           }
         },
-        "summary": "Menambahkan destinasi baru (khusus admin)",
         "tags": [
           "Destinasi"
         ]
@@ -65,16 +70,15 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Detail destinasi berhasil diambil"
+            "description": ""
           }
         },
-        "summary": "Menampilkan detail destinasi berdasarkan ID",
         "tags": [
           "Destinasi"
         ]
@@ -87,7 +91,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -103,10 +107,9 @@
         },
         "responses": {
           "200": {
-            "description": "Destinasi berhasil diperbarui"
+            "description": ""
           }
         },
-        "summary": "Mengubah data destinasi berdasarkan ID",
         "tags": [
           "Destinasi"
         ]
@@ -119,18 +122,100 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Destinasi berhasil dihapus"
+            "description": ""
           }
         },
-        "summary": "Menghapus destinasi berdasarkan ID",
         "tags": [
           "Destinasi"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nama",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "nama": {
+                    "type": "string",
+                    "example": "Nazarul Wisata"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "nazarulbonjol@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Nazarul123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Registrasi akun wisatawan",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "nazarulbonjol@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Nazarul123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Login pengguna dan mendapatkan token JWT",
+        "tags": [
+          "Auth"
         ]
       }
     }
@@ -155,6 +240,11 @@
       "CreateDestinasiDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID unik destinasi"
+          },
           "nama": {
             "type": "string",
             "example": "Pantai Kuta Mandalika"
@@ -169,6 +259,7 @@
           }
         },
         "required": [
+          "id",
           "nama",
           "kategori",
           "hargaTiket"
@@ -177,6 +268,11 @@
       "UpdateDestinasiDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID unik destinasi"
+          },
           "nama": {
             "type": "string",
             "example": "Pantai Kuta Mandalika"

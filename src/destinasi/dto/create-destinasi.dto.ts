@@ -4,9 +4,15 @@ import {
   IsNumber,
   IsNotEmpty,
   Min,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateDestinasiDto {
+  @ApiProperty({ example: 1,description: 'ID unik destinasi'})
+  @IsNumber()
+  @IsOptional()
+  @Min(1)
+  id?: number;
   @ApiProperty({ example: 'Pantai Kuta Mandalika' })
   @IsString()
   @IsNotEmpty()
